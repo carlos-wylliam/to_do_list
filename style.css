@@ -58,10 +58,10 @@ input::placeholder{
     background-image: url("./assets/add.png");
 }
 
-/* #done {
+#done {
    background:#171717 !important;
    color: #474747;
-} */
+}
 
 .delete{
     display: none;
