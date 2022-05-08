@@ -91,3 +91,9 @@ p{
         width: 350px;
     }
 }
+
+@media screen and (max-width: 500px){
+    .container input{
+        width: 300px;
+    }
+}
