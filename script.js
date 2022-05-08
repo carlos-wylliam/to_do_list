@@ -1,90 +1,81 @@
-var enterButton = document.getElementById("enter");
-var input = document.getElementById("userinput");
-var ul = document.getElementById("ul");
-var item = document.getElementsByTagName("li");
+//Criando o "banco de dados" onde vai armazenar as tarefas criadas
+let banco =[
+   
+];
 
-// aqui eu crio uma variável vazia para guardar todas as tarefas
-let array_de_tarefas = [];
+//Salvando os dados no LocalStorage
+const getBanco = () => JSON.parse(localStorage.getItem('todo_List')) ?? [];
 
-function inputLenght() {
-  return input.value.length;
+//Função para enviar para o banco
+const setBanco = (banco) => localStorage.setItem('todo_List', JSON.stringify(banco));
+
+//Função onde vai criar os itens da lista de tarefa itens = a label com a checkbox a div com o texto e botão de remover
+const criarItem = (tarefa, status, indice) => {
+    const item = document.createElement('label');
+    item.classList.add('todo__item');
+    item.innerHTML = `<input type="checkbox" ${status} data-indice=${indice}>
+                      <div>${tarefa}</div>
+                      <input type="button" value="X" data-indice=${indice}>
+      `
+      document.getElementById('todo_List').appendChild(item);
+      
 }
 
-function createListElement() {
-  var li = document.createElement("li");
-
-  li.appendChild(document.createTextNode(input.value));
-  // sempre que for criado uma tarefa eu adiciono ela no array e guardo no localStorage
-  array_de_tarefas.push(input.value);
-  // aqui eu salvo no localStorage o array
-  localStorage.setItem("todas_as_tarefas", JSON.stringify(array_de_tarefas));
-
-  ul.appendChild(li);
-  input.value = "";
-
-  function crossOut() {
-    li.classList.toggle("done");
-  }
-
-  li.addEventListener("click", crossOut);
-
-  var dBtn = document.createElement("button");
-  dBtn.appendChild(document.createTextNode("X"));
-  li.appendChild(dBtn);
-  dBtn.addEventListener("click", deleteListItem);
-
-  function deleteListItem() {
-    li.classList.add("delete");
-  }
+//criando uma função onda vai ler cada objeto do array e criar um item para cada objeto.
+const atualizarTela = () =>{
+    limparTarefas();
+    const banco = getBanco();
+    banco.forEach((item,indice)=> criarItem(item.tarefa, item.status, indice));
 }
 
-// aqui é o que irá acontecer quando a página for atualizada.
-onload = function () {
-  let valor_no_localStorage = localStorage.getItem("todas_as_tarefas");
-
-  // se tiver algum valor no localStorage nos colocamos no lugar do nosso array inicial
-  if (valor_no_localStorage) {
-    array_de_tarefas = JSON.parse(valor_no_localStorage);
-
-    // com  o valor do array nós populamos a tela novamente:
-    // cada item será adicionado em tela novamente, baseado nesse array
-    for (let i = 0; i < array_de_tarefas.length; i++) {
-      var li = document.createElement("li");
-
-      li.appendChild(document.createTextNode(array_de_tarefas[i]));
-      ul.appendChild(li);
-      input.value = "";
-
-      function crossOut() {
-        li.classList.toggle("done");
-      }
-
-      li.addEventListener("click", crossOut);
-
-      var dBtn = document.createElement("button");
-      dBtn.appendChild(document.createTextNode("X"));
-      li.appendChild(dBtn);
-      dBtn.addEventListener("click", deleteListItem);
-
-      function deleteListItem() {
-        li.classList.add("delete");
-      }
-    }
-  }
-};
-
-enterButton.addEventListener("click", addListAfterClick);
-input.addEventListener("keypress", addListAfterKeypress);
-
-function addListAfterClick(e){
-    e.preventDefault();
-    if (inputLenght() > 0){
-        createListElement();
+//Criando função para limpar as tarefas e impedir que ao atualizar os itens eles duplique:
+const limparTarefas = () =>{
+    const todoList = document.getElementById('todo_List');
+    while(todoList.firstChild){
+        todoList.removeChild(todoList.lastChild);
     }
 }
 
-function addListAfterKeypress(){
-    if(inputLenght() > 0 && event.which === 13){
-        createListElement();
-    }
+//Criando a função para inserir uma nova tarefa
+const inserirItem = (evento) =>{
+  const tecla = evento.key;
+  const texto = evento.target.value;
+  if(tecla === 'Enter'){
+      const banco = getBanco();
+      banco.push({'tarefa': texto, 'status': ''});
+      setBanco(banco);
+      atualizarTela();
+      evento.target.value='';
+  }
 }
+document.getElementById('newitem').addEventListener('keypress', inserirItem);
+//Criando a função de remover o item
+const removerItem =(indice)=>{
+    const banco = getBanco();
+    banco.splice(indice,1);
+    setBanco(banco);
+    atualizarTela();
+}
+//Criando a função onde vai saber se o status é vazio ou está checado
+const atualizarItem = (indice)=>{
+    const banco = getBanco();
+    banco[indice].status= banco[indice].status === '' ? 'checked' : '';
+    setBanco(banco);
+}
+//Identificando as tarefas com um indice
+const clickItem = (evento)=>{
+    const elemento = evento.target;
+    console.log(elemento);
+    if(elemento.type === 'button'){
+      const indice = elemento.dataset.indice;
+      removerItem(indice);
+    }
+    //Programando a ação de atualizar os status da tarefa
+    else if(elemento.type === 'checkbox'){
+     const indice = elemento.dataset.indice;
+     atualizarItem(indice);
+    }
+
+}
+document.getElementById('todo_List').addEventListener('click', clickItem)
+atualizarTela();
