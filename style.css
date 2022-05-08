@@ -83,7 +83,8 @@ p{
 
 @media screen and (max-width: 700px){
     .container h1{
-        font-size: 50px;
+        font-size: 60px;
+        font-weight: bolder;
     }
 
     .todo__item{
