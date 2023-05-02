@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;400;800&display=swap');
 *{
     margin: 0;
     padding: 0;
@@ -5,15 +6,18 @@
 }
 
 body {
-    font-family: 'Poppins Black';
+    font-family: 'Inconsolata', monospace, Arial, Helvetica, sans-serif;
+    font-size: 100%;
+    background-color: #7bd2df50;
 }
 
 .container {
     text-align: center;
 }
 
-.container h1 {
-    font-size: 70px;
+.container > h1 {
+    font-size: 5em;
+    font-weight: 800;
     margin-bottom: 10px;
     margin-top: 50px;
 }
@@ -31,9 +35,11 @@ body {
 
 input::placeholder {
     color: black;
-    font-family: 'Poppins Thin';
+    font-family: 'Inconsolata', monospace, Arial, Helvetica, sans-serif;
+    font-weight: 400;
     
 }
+
 .tudo{
     display: flex;
     width: 50vw;
@@ -59,9 +65,15 @@ input::placeholder {
     justify-content: space-between;
     align-items: center;
     padding: 5px;  
-    background-color: #76ff00; 
     border-radius: 10px;
     margin-top: 20px;
+    background: linear-gradient(225deg, #84e1ef, #6fbdc9);
+    box-shadow:  -0px 0px 10px #69b3be81,
+             0px -0px 10px #8df2ff7a;
+    transition: all 0.3s ease 0s;
+}
+.todo__item:hover{
+    transform: scale(1.05);
 }
 .todo__item > div{
     width: 80%;
@@ -75,10 +87,17 @@ input::placeholder {
 .todo__item > input[type='checkbox']:checked  + div {
     text-decoration:line-through;
 }
-
-p{
-    font-size: 10px;
-    margin-top: 200px;
+footer{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 300px;
+}
+footer>p{
+    font-weight: 800;
+    align-self: flex-end;
+    text-align: justify;
+    
 }
 
 @media screen and (max-width: 700px){
